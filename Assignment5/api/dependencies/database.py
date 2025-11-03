@@ -5,8 +5,7 @@ from .config import conf
 from urllib.parse import quote_plus
 
 
-
-SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{conf.user}:{quote_plus(conf.password)}@{conf.host}:{conf.port}/{conf.database}?charset=utf8mb4"
+SQLALCHEMY_DATABASE_URL = "mysql+mysqlconnector://root:Carnick12$@localhost:3306/tododb"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
 )
