@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import List # Need to import List for response models
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine # Assuming database config is here
@@ -23,7 +24,6 @@ def get_db():
 
 @app.post("/users/", response_model=schemas.User)
 def create_user_endpoint(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    # You might want to check if a user with the same name exists first
     return crud.create_user(db=db, user=user)
 
 @app.get("/users/", response_model=List[schemas.User])
@@ -35,6 +35,7 @@ def read_users_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(g
 
 @app.post("/users/{user_id}/todos/", response_model=schemas.Todo)
 def create_todo_for_user(user_id: int, todo: schemas.TodoCreate, db: Session = Depends(get_db)):
+    # Note: Changed to use the create_user_todo function from crud
     return crud.create_user_todo(db=db, todo=todo, user_id=user_id)
 
 @app.get("/todos/", response_model=List[schemas.Todo])

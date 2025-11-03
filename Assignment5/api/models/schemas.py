@@ -1,8 +1,7 @@
 # In Assignment5/api/schemas.py
 
 from pydantic import BaseModel
-from typing import Optional
-from typing import List
+from typing import Optional, List # Combined List and Optional import
 
 # --- User Schemas ---
 
@@ -16,7 +15,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    # REMOVED: todos: List['Todo'] = [] to fix circular import
+    # Removed the 'todos: List['Todo']' line to prevent circular dependency
     
     # CRITICAL: Tells Pydantic to read data from SQLAlchemy model (ORM)
     class Config:
@@ -37,10 +36,9 @@ class TodoCreate(TodoBase):
 
 class Todo(TodoBase):
     id: int
-    # You could add user: User here, but that would also cause a circular dependency
     
     # CRITICAL: Tells Pydantic to read data from SQLAlchemy model (ORM)
     class Config:
         from_attributes = True
 
-# REMOVED: User.model_rebuild()
+# Removed the User.model_rebuild() call
