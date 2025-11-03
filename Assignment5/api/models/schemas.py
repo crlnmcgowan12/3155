@@ -1,113 +1,46 @@
-from datetime import datetime
-from typing import Optional
+# In Assignment5/api/schemas.py
+
 from pydantic import BaseModel
+from typing import List, Optional
 
+# --- User Schemas ---
 
-class SandwichBase(BaseModel):
-    sandwich_name: str
-    price: float
+class UserBase(BaseModel):
+    name: str
+    age: Optional[int] = None
+    gender: Optional[str] = None
 
-
-class SandwichCreate(SandwichBase):
+class UserCreate(UserBase):
     pass
 
-
-class SandwichUpdate(BaseModel):
-    sandwich_name: Optional[str] = None
-    price: Optional[float] = None
-
-
-class Sandwich(SandwichBase):
+class User(UserBase):
     id: int
+    # Define a relationship field for todos (if you have one)
+    todos: List['Todo'] = []
 
-    class ConfigDict:
+    # CRITICAL: Tells Pydantic to read data from SQLAlchemy model (ORM)
+    class Config:
         from_attributes = True
 
 
-class ResourceBase(BaseModel):
-    item: str
-    amount: int
+# --- Todo Schemas ---
 
+class TodoBase(BaseModel):
+    title: str
+    day: Optional[int] = None
+    month: Optional[str] = None
+    year: Optional[int] = None
+    user_id: int  # The foreign key
 
-class ResourceCreate(ResourceBase):
+class TodoCreate(TodoBase):
     pass
 
-
-class ResourceUpdate(BaseModel):
-    item: Optional[str] = None
-    amount: Optional[int] = None
-
-
-class Resource(ResourceBase):
+class Todo(TodoBase):
     id: int
 
-    class ConfigDict:
+    # CRITICAL: Tells Pydantic to read data from SQLAlchemy model (ORM)
+    class Config:
         from_attributes = True
 
-
-class RecipeBase(BaseModel):
-    amount: int
-
-
-class RecipeCreate(RecipeBase):
-    sandwich_id: int
-    resource_id: int
-
-class RecipeUpdate(BaseModel):
-    sandwich_id: Optional[int] = None
-    resource_id: Optional[int] = None
-    amount: Optional[int] = None
-
-class Recipe(RecipeBase):
-    id: int
-    sandwich: Sandwich = None
-    resource: Resource = None
-
-    class ConfigDict:
-        from_attributes = True
-
-
-class OrderDetailBase(BaseModel):
-    amount: int
-
-
-class OrderDetailCreate(OrderDetailBase):
-    order_id: int
-    sandwich_id: int
-
-class OrderDetailUpdate(BaseModel):
-    order_id: Optional[int] = None
-    sandwich_id: Optional[int] = None
-    amount: Optional[int] = None
-
-
-class OrderDetail(OrderDetailBase):
-    id: int
-    order_id: int
-    sandwich: Sandwich = None
-
-    class ConfigDict:
-        from_attributes = True
-
-
-class OrderBase(BaseModel):
-    customer_name: str
-    description: Optional[str] = None
-
-
-class OrderCreate(OrderBase):
-    pass
-
-
-class OrderUpdate(BaseModel):
-    customer_name: Optional[str] = None
-    description: Optional[str] = None
-
-
-class Order(OrderBase):
-    id: int
-    order_date: Optional[datetime] = None
-    order_details: list[OrderDetail] = None
-
-    class ConfigDict:
-        from_attributes = True
+# Update the forward reference for the User schema
+User.model_rebuild()
