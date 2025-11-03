@@ -1,8 +1,9 @@
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
-
+from sqlalchemy.exc import OperationalError
 from .models import models, schemas
+
 from .controllers import orders, sandwiches, resources, recipes # The dot makes it relative
 from .dependencies.database import engine, get_db
 
