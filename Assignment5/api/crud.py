@@ -1,11 +1,12 @@
-# In Assignment5/api/crud.py (FINAL FIX)
+# In Assignment5/api/crud.py
 
 from sqlalchemy.orm import Session
 from typing import List
-import models # <-- Imports the models.py file directly
-import schemas # <-- Imports the schemas.py file directly
 
-# ... rest of the crud.py code ...
+# Change to the correct, simple relative imports for modules in the same directory:
+from . import models
+from . import schemas
+
 
 def get_user(db: Session, user_id: int):
     """Retrieves a single user by ID."""

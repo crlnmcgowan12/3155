@@ -4,11 +4,10 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-# CHANGE THESE LINES back to standard relative imports:
+# Use standard package-level imports:
 from . import crud, models, schemas
 from .database import SessionLocal, engine 
 
-# ... rest of the main.py code ...
 
 # ... rest of the main.py code ...
 
