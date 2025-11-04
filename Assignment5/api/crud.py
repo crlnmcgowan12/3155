@@ -1,8 +1,13 @@
 # In Assignment5/api/crud.py
 
 from sqlalchemy.orm import Session
-from . import models, schemas # KEEP this standard relative import
 from typing import List
+
+# CHANGE THESE LINES to ABSOLUTE IMPORTS:
+import api.models as models
+import api.schemas as schemas
+
+# ... rest of the crud.py code ...
 
 # --- User CRUD Functions ---
 
