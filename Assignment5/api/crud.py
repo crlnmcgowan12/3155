@@ -1,41 +1,40 @@
-# In Assignment5/api/crud.py
+# Assignment5/api/crud.py
 
+from typing import List, TYPE_CHECKING
 from sqlalchemy.orm import Session
-from typing import List
 
-# Change to the correct, simple relative imports for modules in the same directory:
-from . import models
-from . import schemas
+# runtime import only for models
+import api.models as models
+
+if TYPE_CHECKING:
+    # only for type hints during static checking - won't be executed at runtime
+    import api.schemas as schemas
 
 
-def get_user(db: Session, user_id: int):
-    """Retrieves a single user by ID."""
-    # Note: Added the import of models.User explicitly
+# --- User CRUD Functions ---
+def get_user(db: Session, user_id: int) -> models.User | None:
     return db.query(models.User).filter(models.User.id == user_id).first()
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    """Retrieves a list of all users."""
+def get_users(db: Session, skip: int = 0, limit: int = 100) -> List[models.User]:
     return db.query(models.User).offset(skip).limit(limit).all()
 
-def create_user(db: Session, user: schemas.UserCreate):
-    """Creates a new user record in the database."""
+def create_user(db: Session, user: "schemas.UserCreate") -> models.User:
     db_user = models.User(name=user.name, age=user.age, gender=user.gender)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
-# --- Todo CRUD Functions ---
 
-def get_todos(db: Session, skip: int = 0, limit: int = 100):
-    """Retrieves a list of all todo items."""
+# --- Todo CRUD Functions ---
+def get_todos(db: Session, skip: int = 0, limit: int = 100) -> List[models.Todo]:
     return db.query(models.Todo).offset(skip).limit(limit).all()
 
-def create_user_todo(db: Session, todo: schemas.TodoCreate, user_id: int):
-    """Creates a new todo item associated with a specific user."""
-    # Use model_dump() for Pydantic v2 or newer
-    db_todo = models.Todo(**todo.model_dump()) 
-    db_todo.user_id = user_id 
+def create_user_todo(db: Session, todo: "schemas.TodoCreate", user_id: int) -> models.Todo:
+    # todo is a Pydantic model, so use model_dump() (v2) or .dict() for v1
+    todo_data = todo.model_dump() if hasattr(todo, "model_dump") else todo.dict()
+    db_todo = models.Todo(**todo_data)
+    db_todo.user_id = user_id
     db.add(db_todo)
     db.commit()
     db.refresh(db_todo)
