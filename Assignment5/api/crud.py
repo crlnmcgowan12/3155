@@ -3,10 +3,11 @@
 from sqlalchemy.orm import Session
 from typing import List
 
-# CHANGE THESE LINES to ABSOLUTE IMPORTS:
-import api.models as models
-import api.schemas as schemas
+# CHANGE THESE LINES to direct relative imports:
+from . import models
+from . import schemas
 
+# ... rest of the crud.py code ...
 # ... rest of the crud.py code ...
 
 # --- User CRUD Functions ---
