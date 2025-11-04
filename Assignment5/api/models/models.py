@@ -1,16 +1,14 @@
 # Assignment5/api/models.py
 
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, declarative_base
-
-Base = declarative_base()
+from sqlalchemy.orm import relationship
+from database import Base  # assuming database.py defines Base = declarative_base()
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), nullable=False)
-    age = Column(Integer, nullable=True)
-    gender = Column(String(255), nullable=True)
+    username = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
 
     todos = relationship("Todo", back_populates="owner", cascade="all, delete-orphan")
 
@@ -22,6 +20,6 @@ class Todo(Base):
     day = Column(Integer, nullable=True)
     month = Column(String(255), nullable=True)
     year = Column(Integer, nullable=True)
-    user_id = Column(Integer, ForeignKey("user.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))  # note: match "users" not "user"
 
     owner = relationship("User", back_populates="todos")
