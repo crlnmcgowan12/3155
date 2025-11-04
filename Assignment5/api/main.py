@@ -2,10 +2,15 @@
 
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List # Need to import List for response models
+from typing import List
 
-from . import crud, models, schemas
-from .database import SessionLocal, engine # Assuming database config is here
+# CHANGE THESE LINES to ABSOLUTE IMPORTS:
+import api.crud as crud
+import api.models as models
+import api.schemas as schemas
+from .database import SessionLocal, engine 
+
+# ... rest of the main.py code ...
 
 # Setup the database creation (already done, but good practice)
 models.Base.metadata.create_all(bind=engine)
